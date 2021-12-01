@@ -1,7 +1,85 @@
 ﻿@page "/day1"
 
-<h3>Day1</h3>
+@using AOC21.Shared.Parse
+
+@inject IJSRuntime JsRuntime;
+
+<h2><a href="https://adventofcode.com/2021/day/1" target="_blank">Day 1</a></h2>
+<br />
+
+<EditForm Model=fileContent>
+  <InputTextArea @bind-Value=fileContent style="width:800px; height:500px; font-size:24px;">
+  </InputTextArea>
+  <br />
+  <button @onclick=OnOpenFile>Open File</button>
+
+
+</EditForm>
+<br />
+<h3>Part 1</h3>
+<h3>Result is: @resultPart1</h3>
+
+<h3>Part 2</h3>
+<h3>Result is: @resultPart2</h3>
+
 
 @code {
+  string fileContent = string.Empty;
+  string resultPart1 = string.Empty;
+  string resultPart2 = string.Empty;
 
+  private async Task OnOpenFile()
+  {
+
+    this.fileContent = await JsRuntime.InvokeAsync<string>("openFile");
+
+    var items = ParseHelper.Parse<int>(new string[] { Environment.NewLine }, ParserCreator.Int32Parser, this.fileContent);
+    if (!items.Any())
+      return;
+
+    this.Part1(items);
+    this.Part2(items);
+  }
+
+
+  private void Part1(int[] numbers)
+  {
+    int previousNumber = numbers.First();
+    int biggerNumbers = 0;
+    for (int index = 1; index < numbers.Length; index++)
+    {
+      int currentNumber = numbers[index];
+      if (currentNumber > previousNumber)
+        biggerNumbers++;
+
+      previousNumber = numbers[index];
+    }
+
+    this.resultPart1 = biggerNumbers.ToString();
+  }
+
+
+  private void Part2(int[] numbers)
+  {
+
+    int biggerNumbers = 0;
+    Recursive(numbers, null,   ref biggerNumbers);
+
+    static void Recursive(int[] numbers, int? previousSum,  ref int biggerNumbers)
+    {
+      if (!numbers.Any())
+        return;
+
+      var sum = numbers.Take(3).Sum();
+      if (previousSum.HasValue && sum > previousSum)
+        biggerNumbers++;
+
+      previousSum = sum;
+
+      Recursive(numbers.Skip(1).ToArray(), previousSum, ref biggerNumbers);
+    }
+
+
+    this.resultPart2 = biggerNumbers.ToString();
+  }
 }
