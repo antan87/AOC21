@@ -1,0 +1,128 @@
+﻿@page "/day2"
+
+@using AOC21.Shared.Parse
+
+@inject IJSRuntime JsRuntime;
+
+<h2><a href="https://adventofcode.com/2021/day/2" target="_blank">Day 2</a></h2>
+<br />
+
+<EditForm Model=fileContent>
+  <InputTextArea @bind-Value=fileContent style="width:1500px; height:800px; font-size:24px;">
+  </InputTextArea>
+  <br />
+  <button @onclick=OnOpenFile>Open File</button>
+  </EditForm>
+
+  <br />
+<h3>Part 1</h3>
+<h3>Result is: @resultPart1</h3>
+
+  <br />
+<h3>Part 2</h3>
+<h3>Result is: @resultPart2</h3>
+@code {
+    string fileContent = string.Empty;
+    int resultPart1 ;
+    int resultPart2 ;
+    private async Task OnOpenFile()
+    {
+        this.fileContent = await JsRuntime.InvokeAsync<string>("openFile");
+        var values = ParseHelper.Parse<string>(new string[] { Environment.NewLine }, ParserCreator.StringParser, this.fileContent);
+        if (!values.Any())
+            return;
+
+        this.Part1(values);
+        this.Part2(values);
+    }
+
+    private void Part1(string[] inputs)
+    {
+        var commands = inputs.Select(input => GetCommand(input));
+
+        var coordinate =  new Coordinate(new X(0), new Y(0));
+        foreach(var command in commands)
+        {
+            switch(command)
+            {
+                case ForwardCommand fCommand:
+                    coordinate = coordinate with { X = new X(coordinate.X.Point + fCommand.Steps) };
+                    break;
+
+                case UpCommand uCommand:
+                    coordinate = coordinate with { Y = new Y(coordinate.Y.Point - uCommand.Steps) };
+                    break;
+
+                case DownCommand dCommand:
+                    coordinate = coordinate with { Y = new Y(coordinate.Y.Point + dCommand.Steps) };
+                    break;
+            }
+        }
+
+        this.resultPart1 = coordinate.X.Point * coordinate.Y.Point;
+    }
+
+    private void Part2(string[] inputs)
+    {
+        var commands = inputs.Select(input => GetCommand(input));
+
+        var coordinate =  new CoordinateWithAim(new X(0), new Y(0),new Aim(0));
+        foreach(var command in commands)
+        {
+            switch(command)
+            {
+                case ForwardCommand fCommand:
+                    coordinate = coordinate with { X = new X(coordinate.X.Point + fCommand.Steps), Y = new Y(coordinate.Y.Point + (fCommand.Steps * coordinate.Aim.Point)) };
+                    break;
+
+                case UpCommand uCommand:
+                    coordinate = coordinate with { Aim = new Aim(coordinate.Aim.Point - uCommand.Steps) };
+                    break;
+
+                case DownCommand dCommand:
+                    coordinate = coordinate with { Aim = new Aim(coordinate.Aim.Point + dCommand.Steps) };
+                    break;
+            }
+        }
+
+        this.resultPart2 = coordinate.X.Point * coordinate.Y.Point;
+    }
+
+    private ICommand GetCommand(string inputCommand)
+    {
+        string[] values = inputCommand.Split();
+        int steps =  ParserCreator.Int32Parser.Parse(values[1].Trim());
+        switch(values[0].ToLower())
+        {
+            case "forward":
+                return new ForwardCommand(steps);
+
+            case "down":
+                return new DownCommand(steps);
+
+            case "up":
+                return new UpCommand(steps);
+
+            default:
+                throw new NotImplementedException("No corresponding command");
+        }
+    }
+
+    private record ForwardCommand(int Steps): ICommand;
+    private record DownCommand(int Steps): ICommand;
+    private record UpCommand(int Steps): ICommand;
+    private record X(int Point): IVector;
+    private record Y(int Point): IVector;
+    private record Aim(int Point): IVector;
+    private record Coordinate (X X, Y Y);
+    private record CoordinateWithAim (X X, Y Y, Aim Aim);
+    private interface ICommand
+    {
+        int Steps { get; }
+    }
+
+     private interface IVector
+    {
+        int Point { get; }
+    }
+}
