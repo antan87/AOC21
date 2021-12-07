@@ -1,0 +1,126 @@
+﻿@page "/day4"
+@using AOC21.Shared.Algebra.Interface
+@using AOC21.Shared.Algebra.Models
+@using AOC21.Shared.Parse
+@using AOC21.Shared.Parse.Interface
+
+@inject IJSRuntime JsRuntime;
+
+<h2><a href="https://adventofcode.com/2021/day/4" target="_blank">Day 4</a></h2>
+<br />
+
+<EditForm Model=fileContent>
+  <InputTextArea @bind-Value=fileContent style="width:480px; height:400px; font-size:24px;">
+  </InputTextArea>
+  <br />
+  <button @onclick=OnOpenFile>Open File</button>
+</EditForm>
+
+<br />
+<h3>Part 1</h3>
+<h3>Result is: @resultPart1</h3>
+
+<br />
+<h3>Part 2</h3>
+<h3>Result is: @resultPart2</h3>
+
+@code {
+    string fileContent = string.Empty;
+    string binaryResultIverse = string.Empty;
+    string binaryResult = string.Empty;
+    int resultPart1;
+    int resultPart2;
+
+    private async Task OnOpenFile()
+    {
+        this.fileContent = await JsRuntime.InvokeAsync<string>("openFile");
+        var board = ParseHelper.Parse<Board>(new BoardParser(), this.fileContent);
+
+        this.Part1(board);
+        this.Part2(board);
+    }
+
+
+    private void Part1(Board board)
+    {
+        foreach (var number in board.Numbers)
+        {
+            foreach (var brick in board.Bricks)
+                brick.Numbers.Where(brickNumber => brickNumber.Number == number).ToList().ForEach(brickNumber => brickNumber.IsMarked = true);
+
+            var bingoBrick = board.Bricks.FirstOrDefault(brick => brick.Numbers.GroupBy(point => point.Point.X).Any(item => item.All(item => item.IsMarked) || brick.Numbers.GroupBy(point => point.Point.Y).Any(item => item.All(item => item.IsMarked))));
+            if (bingoBrick != null)
+            {
+                this.resultPart1 = bingoBrick.Numbers.Where(bingoNumber => !bingoNumber.IsMarked).Sum(bingoNumber => bingoNumber.Number) * number;
+                return;
+            }
+        }
+    }
+
+    private void Part2(Board board)
+    {
+        foreach (var number in board.Numbers)
+        {
+            foreach (var brick in board.Bricks) {
+                brick.Numbers.Where(brickNumber => brickNumber.Number == number).ToList().ForEach(brickNumber => brickNumber.IsMarked = true);
+            }
+
+            var bingoBricks = board.Bricks.Where(brick => brick.Numbers.GroupBy(point => point.Point.X).Any(item => item.All(item => item.IsMarked) || brick.Numbers.GroupBy(point => point.Point.Y).Any(item => item.All(item => item.IsMarked)))).ToList();
+            if(board.Bricks.Count() == 1 && bingoBricks.Any())
+            {
+                this.resultPart2 = bingoBricks.First().Numbers.Where(bingoNumber => !bingoNumber.IsMarked).Sum(bingoNumber => bingoNumber.Number) * number;
+                return;
+            }
+
+            board = board with { Bricks = board.Bricks.Where(brick => !bingoBricks.Any(bingoBrick =>  brick.BrickNumber == bingoBrick.BrickNumber )) };
+        }
+    }
+
+    public class BoardParser : IParser<Board>
+    {
+        Board IParser<Board>.Parse(string input)
+        {
+            var split = input.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).Where(item => !string.IsNullOrWhiteSpace(item)).ToArray();
+            int[] numbers = ParseHelper.Parse<int>(new string[] { "," }, ParserCreator.Int32Parser, split.First().Trim()).Distinct().ToArray();
+            List<Brick> bricks = new List<Brick>();
+            for (int index = 1; index < split.Length; index+=5)
+            {
+                var splitValues = split.Skip(index).Take(5).Reverse().ToArray();
+                var brick = new List<BrickPoint>();
+                for (int y = 0; y <5; y++)
+                {
+                    var splitStrings = string.Join(",", ParseHelper.Parse<string>( new string[] { " "} , ParserCreator.StringParser,splitValues[y], StringSplitOptions.RemoveEmptyEntries).Where(ote => !string.IsNullOrWhiteSpace(ote)));
+                    var values = ParseHelper.Parse<int>(new string[] { "," }, ParserCreator.Int32Parser,splitStrings ,StringSplitOptions.TrimEntries);
+                    int x = 0;
+                    foreach (var value in values)
+                    {
+                        brick.Add(new BrickPoint(new Point2D(x, y), value));
+                        x++;
+                    }
+                }
+
+                bricks.Add(new Brick(bricks.Count(),brick));
+            }
+
+            return new Board(numbers, bricks);
+        }
+    }
+
+    private record Board(IEnumerable<int> Numbers, IEnumerable<Brick> Bricks);
+
+    private class BrickPoint : IVector {
+    public     BrickPoint (IPoint point, int number, bool IsMarked = false)
+        {
+            Point = point;
+            Number = number;
+            this.IsMarked = IsMarked;
+        }
+
+        public IPoint Point { get; }
+        public int Number { get; }
+        public bool IsMarked { get; set; }
+    }
+
+    private record Brick(int BrickNumber, List<BrickPoint> Numbers);
+
+}

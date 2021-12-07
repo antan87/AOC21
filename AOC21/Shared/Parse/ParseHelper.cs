@@ -10,7 +10,15 @@ public static class ParseHelper
         if (string.IsNullOrWhiteSpace(input))
             return Array.Empty<T>();
 
-        return input.Split(separators, stringSplitOptions).Select(number => parser.Parse(number.Trim())).ToArray();
+        return input.Split(separators, stringSplitOptions).Select(number => parser.Parse(number)).ToArray();
+    }
+
+    public static T Parse<T>(IParser<T> parser, string? input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+            throw new NullReferenceException();
+
+        return parser.Parse(input);
     }
 
     public static IEnumerable<T> GetInput<T>(IEnumerable<string> values, IParser2D<T> parser)
