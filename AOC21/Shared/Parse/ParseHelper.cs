@@ -13,6 +13,16 @@ public static class ParseHelper
         return input.Split(separators, stringSplitOptions).Select(number => parser.Parse(number)).ToArray();
     }
 
+    public async static Task<string> GetInput(string resourceNamePath)
+    {
+        string assembly = resourceNamePath.Split('.')[0];
+        using (Stream? stream = Assembly.LoadFrom(assembly).GetManifestResourceStream(resourceNamePath))
+        using (StreamReader reader = new StreamReader(stream!))
+        {
+            return await reader.ReadToEndAsync();
+        }
+    }
+
     public static T Parse<T>(IParser<T> parser, string? input)
     {
         if (string.IsNullOrWhiteSpace(input))
@@ -20,7 +30,7 @@ public static class ParseHelper
 
         return parser.Parse(input);
     }
-
+  
     public static IEnumerable<T> GetInput<T>(IEnumerable<string> values, IParser2D<T> parser)
     {
         values.Reverse();
