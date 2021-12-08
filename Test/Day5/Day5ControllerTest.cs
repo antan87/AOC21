@@ -7,7 +7,6 @@ namespace Test.Day5
 {
     public  class Day5ControllerTest
     {
-
         [Fact]
         public async Task Run_Part1()
         {

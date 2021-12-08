@@ -15,7 +15,7 @@ namespace AOC21.Shared.Day5
 
         IEnumerable<Direction> IParser<IEnumerable<Direction>>.Parse(string input)
         {
-            var splits = ParseHelper.Parse<string>(new string[] { "->", Environment.NewLine }, ParserCreator.StringParser, input, StringSplitOptions.TrimEntries);
+            var splits = ParseHelper.Parse(new string[] { "->", Environment.NewLine }, ParserCreator.StringParser, input, StringSplitOptions.TrimEntries);
             var points = splits.Select(item => ParseHelper.Parse<int>(new string[] { "," }, ParserCreator.Int32Parser, item)).Select(item => new Point2D(item[0], item[1])).ToList();
 
             for (int index = 0; index < points.Count(); index += 2)

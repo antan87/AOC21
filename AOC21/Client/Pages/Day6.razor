@@ -1,0 +1,45 @@
+﻿@page "/day6"
+@using AOC21.Shared.Day6
+@using AOC21.Shared.Parse
+@using AOC21.Shared.Parse.Interface
+
+@inject IJSRuntime JsRuntime;
+
+<h2><a href="https://adventofcode.com/2021/day/6" target="_blank">Day 6</a></h2>
+<br />
+
+<EditForm Model=fileContent>
+  <InputTextArea @bind-Value=fileContent style="width:480px; height:400px; font-size:24px;">
+  </InputTextArea>
+  <br />
+  <button @onclick=OnOpenFile>Open File</button>
+</EditForm>
+
+<br />
+<h3>Part 1</h3>
+<h3>Result is: @resultPart1</h3>
+
+<br />
+<h3>Part 2</h3>
+<h3>Result is: @resultPart2</h3>
+
+@code {
+    string fileContent = string.Empty;
+    long resultPart1;
+    long resultPart2;
+
+    private async Task OnOpenFile()
+    {
+        this.fileContent = await JsRuntime.InvokeAsync<string>("openFile");
+        this.Part1(this.fileContent);
+    }
+
+    private void Part1(string input)
+    {
+        var result = new Day6Controller().Run(80,input) ;
+        this.resultPart1 = result;
+        
+        result = new Day6Controller().Run(256,input) ;
+        this.resultPart2 = result;
+    }
+}
