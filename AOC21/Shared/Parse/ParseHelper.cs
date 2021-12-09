@@ -1,5 +1,5 @@
-﻿using System.Reflection;
-using AOC21.Shared.Parse.Interface;
+﻿using AOC21.Shared.Parse.Interface;
+using System.Reflection;
 
 namespace AOC21.Shared.Parse;
 
@@ -30,7 +30,7 @@ public static class ParseHelper
 
         return parser.Parse(input);
     }
-  
+
     public static IEnumerable<T> GetInput<T>(IEnumerable<string> values, IParser2D<T> parser)
     {
         values.Reverse();

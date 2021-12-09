@@ -22,7 +22,7 @@ namespace AOC21.Shared.Day5
             {
                 var selectedPoints = points.Skip(index).Take(2).ToList();
 
-                yield return new Direction(selectedPoints.First(), selectedPoints.Last(),this.useDiagonal);
+                yield return new Direction(selectedPoints.First(), selectedPoints.Last(), this.useDiagonal);
             }
         }
     }

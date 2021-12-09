@@ -7,7 +7,7 @@
             if (DaysLeft == 0)
                 return new LanternFish(6, CountOfFishes);
 
-            return new LanternFish(DaysLeft - 1,CountOfFishes);
+            return new LanternFish(DaysLeft - 1, CountOfFishes);
         }
     }
 }

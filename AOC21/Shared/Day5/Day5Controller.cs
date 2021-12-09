@@ -8,11 +8,11 @@ namespace AOC21.Shared.Day5
         {
             var directions = ParseHelper.Parse<IEnumerable<Direction>>(new DirectionParser(false), input);
 
-            var part1 =  this.Calculator(directions.ToList());
+            var part1 = this.Calculator(directions.ToList());
             var directions2 = ParseHelper.Parse<IEnumerable<Direction>>(new DirectionParser(true), input);
             var part2 = this.Calculator(directions2.ToList());
 
-            return  (part1, part2);
+            return (part1, part2);
         }
 
         private int Calculator(List<Direction> directions)
