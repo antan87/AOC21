@@ -1,5 +1,5 @@
-﻿using AOC21.Shared.Parse.Interface;
-using System.Reflection;
+﻿using System.Reflection;
+using AOC21.Shared.Parse.Interface;
 
 namespace AOC21.Shared.Parse;
 
@@ -13,7 +13,7 @@ public static class ParseHelper
         return input.Split(separators, stringSplitOptions).Select(number => parser.Parse(number)).ToArray();
     }
 
-    public async static Task<string> GetInput(string resourceNamePath)
+    public static async Task<string> GetInput(string resourceNamePath)
     {
         string assembly = resourceNamePath.Split('.')[0];
         using (Stream? stream = Assembly.LoadFrom(assembly).GetManifestResourceStream(resourceNamePath))
