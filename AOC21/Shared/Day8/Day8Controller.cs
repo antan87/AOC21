@@ -7,14 +7,14 @@ namespace AOC21.Shared.Day8
     {
         public static Dictionary<int, List<SevenDigitNumberSegment>> Numbers = new Dictionary<int, List<SevenDigitNumberSegment>>
         {
-            {0, new List<SevenDigitNumberSegment>  { SevenDigitNumberSegment.Top, SevenDigitNumberSegment.TopLeft, SevenDigitNumberSegment.TopRight, SevenDigitNumberSegment.BottomLeft, SevenDigitNumberSegment.BottomRight,  SevenDigitNumberSegment.Bottom } },
-            {1, new List<SevenDigitNumberSegment>  { SevenDigitNumberSegment.TopRight, SevenDigitNumberSegment.BottomRight} },
-            {2, new List<SevenDigitNumberSegment>  { SevenDigitNumberSegment.Top, SevenDigitNumberSegment.TopRight , SevenDigitNumberSegment.Middel, SevenDigitNumberSegment.BottomLeft, SevenDigitNumberSegment.Bottom } },
-            {3, new List<SevenDigitNumberSegment>  { SevenDigitNumberSegment.Top, SevenDigitNumberSegment.TopRight , SevenDigitNumberSegment.Middel, SevenDigitNumberSegment.BottomRight, SevenDigitNumberSegment.Bottom } },
-            {4, new List<SevenDigitNumberSegment>  { SevenDigitNumberSegment.TopLeft, SevenDigitNumberSegment.TopRight , SevenDigitNumberSegment.Middel, SevenDigitNumberSegment.BottomRight } },
-            {5, new List<SevenDigitNumberSegment>  { SevenDigitNumberSegment.Top, SevenDigitNumberSegment.TopLeft, SevenDigitNumberSegment.Middel, SevenDigitNumberSegment.BottomRight ,SevenDigitNumberSegment.Bottom } },
-            {6, new List<SevenDigitNumberSegment>  { SevenDigitNumberSegment.Top, SevenDigitNumberSegment.TopLeft, SevenDigitNumberSegment.Middel, SevenDigitNumberSegment.BottomLeft, SevenDigitNumberSegment.BottomRight ,SevenDigitNumberSegment.Bottom } },
-            {7, new List<SevenDigitNumberSegment>  { SevenDigitNumberSegment.Top, SevenDigitNumberSegment.TopRight, SevenDigitNumberSegment.BottomRight } },
+            {0, new List<SevenDigitNumberSegment> { SevenDigitNumberSegment.Top, SevenDigitNumberSegment.TopLeft, SevenDigitNumberSegment.TopRight, SevenDigitNumberSegment.BottomLeft, SevenDigitNumberSegment.BottomRight,  SevenDigitNumberSegment.Bottom } },
+            {1, new List<SevenDigitNumberSegment> { SevenDigitNumberSegment.TopRight, SevenDigitNumberSegment.BottomRight} },
+            {2, new List<SevenDigitNumberSegment> { SevenDigitNumberSegment.Top, SevenDigitNumberSegment.TopRight , SevenDigitNumberSegment.Middel, SevenDigitNumberSegment.BottomLeft, SevenDigitNumberSegment.Bottom } },
+            {3, new List<SevenDigitNumberSegment> { SevenDigitNumberSegment.Top, SevenDigitNumberSegment.TopRight , SevenDigitNumberSegment.Middel, SevenDigitNumberSegment.BottomRight, SevenDigitNumberSegment.Bottom } },
+            {4, new List<SevenDigitNumberSegment> { SevenDigitNumberSegment.TopLeft, SevenDigitNumberSegment.TopRight , SevenDigitNumberSegment.Middel, SevenDigitNumberSegment.BottomRight } },
+            {5, new List<SevenDigitNumberSegment> { SevenDigitNumberSegment.Top, SevenDigitNumberSegment.TopLeft, SevenDigitNumberSegment.Middel, SevenDigitNumberSegment.BottomRight ,SevenDigitNumberSegment.Bottom } },
+            {6, new List<SevenDigitNumberSegment> { SevenDigitNumberSegment.Top, SevenDigitNumberSegment.TopLeft, SevenDigitNumberSegment.Middel, SevenDigitNumberSegment.BottomLeft, SevenDigitNumberSegment.BottomRight ,SevenDigitNumberSegment.Bottom } },
+            {7, new List<SevenDigitNumberSegment> { SevenDigitNumberSegment.Top, SevenDigitNumberSegment.TopRight, SevenDigitNumberSegment.BottomRight } },
             {8, new List<SevenDigitNumberSegment> { SevenDigitNumberSegment.Top, SevenDigitNumberSegment.TopLeft, SevenDigitNumberSegment.TopRight,SevenDigitNumberSegment.Middel , SevenDigitNumberSegment.BottomLeft, SevenDigitNumberSegment.BottomRight,   SevenDigitNumberSegment.Bottom } },
             {9, new List<SevenDigitNumberSegment> { SevenDigitNumberSegment.Top, SevenDigitNumberSegment.TopLeft, SevenDigitNumberSegment.TopRight,  SevenDigitNumberSegment.Middel,  SevenDigitNumberSegment.BottomRight, SevenDigitNumberSegment.Bottom } },
         };
@@ -25,10 +25,10 @@ namespace AOC21.Shared.Day8
 
 
             return array.Sum(stringItem => stringItem.Output.Count(stringItem =>
-                                             stringItem.Count() == Numbers[1].Count ||
-                                             stringItem.Count() == Numbers[4].Count ||
-                                             stringItem.Count() == Numbers[7].Count ||
-                                             stringItem.Count() == Numbers[8].Count));
+                                           stringItem.Count() == Numbers[1].Count ||
+                                           stringItem.Count() == Numbers[4].Count ||
+                                           stringItem.Count() == Numbers[7].Count ||
+                                           stringItem.Count() == Numbers[8].Count));
 
         }
 
@@ -119,24 +119,7 @@ namespace AOC21.Shared.Day8
 
             public NumberItem New(string[] letters) => new(this.Number, this.Segments, letters);
         }
-
-        public record SevenDigit
-        {
-            public SevenDigit(IEnumerable<SevenDigitNumberSegment> segments, string[] letters)
-            {
-                if (segments.Count() != letters.Count())
-                    throw new ArgumentException($"Segments {segments.Count()} do not match letters {letters.Count()}");
-                Segments = segments;
-                Letters = segments.Select((item, index) => new SegmentItem(item, letters[index]));
-            }
-            public IEnumerable<SegmentItem> Letters { get; }
-            public IEnumerable<SevenDigitNumberSegment> Segments { get; } = Enumerable.Empty<SevenDigitNumberSegment>();
-
-            public SevenDigit New(string[] letters) => new(this.Segments, letters);
-        }
         public record InputOutput(string[] Input, string[] Output);
-
-
         public enum SevenDigitNumberSegment
         {
             Top,

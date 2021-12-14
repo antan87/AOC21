@@ -13,6 +13,14 @@ public static class ParseHelper
         return input.Split(separators, stringSplitOptions).Select(number => parser.Parse(number)).ToArray();
     }
 
+    public static T[] Parse<T>(this string? input, string[] separators, IParser<T> parser, StringSplitOptions stringSplitOptions = StringSplitOptions.None)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+            return Array.Empty<T>();
+
+        return input.Split(separators, stringSplitOptions).Select(number => parser.Parse(number)).ToArray();
+    }
+
     public static async Task<string> GetInput(string resourceNamePath)
     {
         string assembly = resourceNamePath.Split('.')[0];
@@ -31,7 +39,7 @@ public static class ParseHelper
         return parser.Parse(input);
     }
 
-    public static IEnumerable<T> GetInput<T>(IEnumerable<string> values, IParser2D<T> parser)
+    public static IEnumerable<T> GetInput<T>(this IEnumerable<string> values, IParser2D<T> parser)
     {
         values.Reverse();
         return values.Select((input, y) => parser.Parse(y, input)).SelectMany(item => item);

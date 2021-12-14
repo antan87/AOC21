@@ -1,11 +1,12 @@
-﻿@page "/day8"
-@using AOC21.Shared.Day8
+﻿@page "/day9"
+
+@using AOC21.Shared.Day9
 @using AOC21.Shared.Parse
 @using AOC21.Shared.Parse.Interface
 
 @inject IJSRuntime JsRuntime;
 
-<h2><a href="https://adventofcode.com/2021/day/8" target="_blank">Day 8</a></h2>
+<h2><a href="https://adventofcode.com/2021/day/9" target="_blank">Day 9</a></h2>
 <br />
 
 <EditForm Model=fileContent>
@@ -36,10 +37,10 @@
 
     private void Part1(string input)
     {
-        var result = new Day8Controller().Run(input) ;
+        var result = new Day9Controller().Run(input) ;
         this.resultPart1 = result;
 
-        var result2 = new Day8Controller().Run2(input) ;
+        var result2 = new Day9Controller().Run2(input) ;
         this.resultPart2 = result2;
     }
 }
