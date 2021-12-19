@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
-using AOC21.Shared.Day10;
+﻿using AOC21.Shared.Day10;
 using AOC21.Shared.Parse;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Test.Day10

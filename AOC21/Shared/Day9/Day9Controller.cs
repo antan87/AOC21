@@ -9,7 +9,7 @@ namespace AOC21.Shared.Day9
         public int Run(string input)
         {
             var locations = input.Parse(new string[] { Environment.NewLine }, ParserCreator.StringParser)
-                                 .GetInput(new LocatonParser())
+                                 .GetInput(new LocationParser())
                                  .ToList();
 
             var resultLocations = locations.Where(location => location.GetNeighbors(locations).All(neigbor => neigbor.Number > location.Number));
@@ -20,7 +20,7 @@ namespace AOC21.Shared.Day9
         public int Run2(string input)
         {
             var locations = input.Parse(new string[] { Environment.NewLine }, ParserCreator.StringParser)
-                                 .GetInput(new LocatonParser())
+                                 .GetInput(new LocationParser())
                                  .ToList();
 
 
@@ -32,7 +32,7 @@ namespace AOC21.Shared.Day9
                 .Aggregate((a, b) => a * b);
         }
 
-        private class LocatonParser : IParser2D<Location>
+        private class LocationParser : IParser2D<Location>
         {
             public Location[] Parse(int y, string value) =>
             value.Select((charachter, x) => GetVector(charachter, new Point2D(x, y))).ToArray();

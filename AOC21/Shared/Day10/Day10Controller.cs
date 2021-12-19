@@ -1,6 +1,5 @@
 ﻿using AOC21.Shared.Parse;
 using AOC21.Shared.Parse.Interface;
-using System.Linq;
 
 namespace AOC21.Shared.Day10;
 
@@ -24,13 +23,11 @@ public class Day10Controller
 
         var array = list.Select(characters => new Chunk(characters))
             .Select(chunk => chunk.Collect())
-            .Where(chunk => chunk.IsValid )
+            .Where(chunk => chunk.IsValid)
             .OrderByDescending(item => item.Points)
             .ToArray();
 
         return array[array.Length / 2].Points;
-            
-
     }
 
     private class Parser : IParser<IEnumerable<IEnumerable<ICharacter>>>
@@ -42,8 +39,8 @@ public class Day10Controller
 
             IEnumerable<IEnumerable<ICharacter>> GetCharacters(string[] array)
             {
-              var s =  array.Select(item => item.Select(character => GetCharacterObject(character)));
-                 return s;
+                var s = array.Select(item => item.Select(character => GetCharacterObject(character)));
+                return s;
             }
         }
 
@@ -89,31 +86,36 @@ public record Chunk(IEnumerable<ICharacter> Characters, bool IsValid = true)
     public long Points { get; init; }
     public Chunk Collect()
     {
-        List< LeftOpener> openers= new List<LeftOpener>();
+        List<LeftOpener> openers = new List<LeftOpener>();
         foreach (var character in Characters)
         {
-            if(character is RightClose)
+            if (character is RightClose)
             {
-                 if(!openers.Any() || !openers.First().ExpectedCloseCharacter.Equals(character.Character))
-                    return new Chunk(Characters,false) { Points = GetWrongCloserPoint(character) };
+                if (!openers.Any() || !openers.First().ExpectedCloseCharacter.Equals(character.Character))
+                    return new Chunk(Characters, false) { Points = GetWrongCloserPoint(character) };
 
                 openers.RemoveAt(0);
-            } else 
+            }
+            else
             {
-                openers.Insert(0,(LeftOpener)character);
+                openers.Insert(0, (LeftOpener)character);
             }
         }
 
         //Characters.Concat(openers.Select(item => new RightClose(item.ExpectedCloseCharacter)));
-        var result = new Chunk(Characters) { Points = openers.Select(item => 
-             GetMissingCloserPoint( item))
-            .Aggregate(0, (long a, long b) => {
+        var result = new Chunk(Characters)
+        {
+            Points = openers.Select(item =>
+GetMissingCloserPoint(item))
+            .Aggregate(0, (long a, long b) =>
+            {
                 return a * 5 + b;
-            } )};
+            })
+        };
 
         return result;
 
-     static int GetWrongCloserPoint(ICharacter character)
+        static int GetWrongCloserPoint(ICharacter character)
         {
             switch (character.Character)
             {
