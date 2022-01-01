@@ -1,5 +1,5 @@
-﻿using AOC21.Shared.Parse.Interface;
-using System.Reflection;
+﻿using System.Reflection;
+using AOC21.Shared.Parse.Interface;
 
 namespace AOC21.Shared.Parse;
 

@@ -6,7 +6,6 @@ namespace AOC21.Shared.Day11
 {
     public class Day11Controller
     {
-
         public int Run(string input)
         {
             var lines = ParseHelper.Parse(new string[] { Environment.NewLine }, ParserCreator.StringParser, input, StringSplitOptions.TrimEntries);
@@ -182,13 +181,7 @@ namespace AOC21.Shared.Day11
 
                 (int dx, int dy) = GetDiagonalXy(this, octopus);
                 if (IsDiagonal(dx, dy))
-                {
-                    if (!diagonalList.Any(item => item.xP == dx.GetIntPosition() && item.yp == dy.GetIntPosition()))
-                    {
-                        diagonalList.Add((dx.GetIntPosition(), dy.GetIntPosition()));
-                        Step();
-                    }
-                }
+                    Step();
             }
 
             private static bool IsDiagonal(int dx, int dy)
