@@ -1,9 +1,8 @@
-﻿using AOC21.Shared.Day12;
-using AOC21.Shared.Parse;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AOC21.Shared.Day12;
+using AOC21.Shared.Parse;
 using Xunit;
 using static AOC21.Shared.Day12.Day12Controller;
 
@@ -33,5 +32,4 @@ namespace Test.Day12
             Assert.Equal(36, result.Count());
         }
     }
-
 }
